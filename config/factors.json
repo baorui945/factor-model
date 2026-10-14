@@ -1,0 +1,120 @@
+{
+  "_comment": "因子与组合配置 —— 新增/替换因子或调整阈值时只改本文件。因子定义见 backtest_model/factors/builtin.py。算子: < <= > >= == != between；between 的 inclusive 可为 left/both/right/neither（默认 left）。",
+
+  "best_key": "S1",
+
+  "readme_object": "三因子买点信号（F1 趋势强弱=vol60 / F2 趋势方向=mom60 / F3 多空力量=MACD(30,89,9) hist）筛选出的「最优组合」",
+
+  "combos": [
+    {
+      "key": "ALL",
+      "name": "全部三因子信号",
+      "desc": "不筛因子，作为基准对照",
+      "rules": []
+    },
+    {
+      "key": "A",
+      "name": "优选组合A",
+      "desc": "报告 §3.2 第 3 层（样本充足）",
+      "rules": [
+        {"factor": "nmc", "op": "<", "value": 40},
+        {"factor": "vol60", "op": "<", "value": 0.45},
+        {"factor": "mom60", "op": "between", "value": [-0.10, 0.10], "inclusive": "both"}
+      ]
+    },
+    {
+      "key": "S1",
+      "name": "最优组合S1",
+      "desc": "报告 §3.3 综合最优（四期全正）",
+      "readme": "流通市值 nmc < 20 亿  且  25% ≤ 60日年化波动 vol60 < 35%  且  −10% ≤ 60日动量 mom60 < 0",
+      "rules": [
+        {"factor": "nmc", "op": "<", "value": 20},
+        {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"},
+        {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}
+      ]
+    },
+    {
+      "key": "S2",
+      "name": "最优组合S2(宽)",
+      "desc": "S1 放宽动量下界到 mom60<0",
+      "rules": [
+        {"factor": "nmc", "op": "<", "value": 20},
+        {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"},
+        {"factor": "mom60", "op": "<", "value": 0}
+      ]
+    },
+    {
+      "key": "S3",
+      "name": "S1+择时",
+      "desc": "S1 叠加「沪深300 在 MA60 上方」",
+      "rules": [
+        {"factor": "nmc", "op": "<", "value": 20},
+        {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"},
+        {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"},
+        {"factor": "mkt_dev", "op": ">", "value": 0}
+      ]
+    },
+    {
+      "key": "S4",
+      "name": "S1+低估值",
+      "desc": "S1 叠加「PB<2」",
+      "rules": [
+        {"factor": "nmc", "op": "<", "value": 20},
+        {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"},
+        {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"},
+        {"factor": "pb_t", "op": "<", "value": 2}
+      ]
+    }
+  ],
+
+  "sensitivity": [
+    {"name": "流通市值 < 15 亿", "rules": [{"factor": "nmc", "op": "<", "value": 15}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "流通市值 < 20 亿", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "流通市值 < 25 亿", "rules": [{"factor": "nmc", "op": "<", "value": 25}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "流通市值 < 30 亿", "rules": [{"factor": "nmc", "op": "<", "value": 30}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "流通市值 < 40 亿", "rules": [{"factor": "nmc", "op": "<", "value": 40}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+
+    {"name": "60日波动 20%~30%", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.20, 0.30], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "60日波动 25%~35%", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "60日波动 30%~40%", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.30, 0.40], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "60日波动 35%~45%", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.35, 0.45], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+
+    {"name": "60日动量 −15%~0%", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.15, 0], "inclusive": "left"}]},
+    {"name": "60日动量 −10%~0%", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.10, 0], "inclusive": "left"}]},
+    {"name": "60日动量 −5%~0%", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-0.05, 0], "inclusive": "left"}]},
+    {"name": "60日动量 全部 <0", "rules": [{"factor": "nmc", "op": "<", "value": 20}, {"factor": "vol60", "op": "between", "value": [0.25, 0.35], "inclusive": "left"}, {"factor": "mom60", "op": "between", "value": [-1, 0], "inclusive": "left"}]}
+  ],
+
+  "layers": [
+    {
+      "dimension": "流通市值",
+      "factor": "nmc",
+      "fixed_text": "vol60<45% & |mom60|<10%",
+      "fixed_rules": [
+        {"factor": "vol60", "op": "<", "value": 0.45},
+        {"factor": "mom60", "op": "between", "value": [-0.10, 0.10], "inclusive": "both"}
+      ],
+      "buckets": [[0, 20, "<20亿"], [20, 40, "20-40亿"], [40, 70, "40-70亿"], [70, 100, "70-100亿"], [100, 300, "100-300亿"], [300, 9000000000, ">300亿"]]
+    },
+    {
+      "dimension": "60日波动率",
+      "factor": "vol60",
+      "fixed_text": "nmc<40亿 & |mom60|<10%",
+      "fixed_rules": [
+        {"factor": "nmc", "op": "<", "value": 40},
+        {"factor": "mom60", "op": "between", "value": [-0.10, 0.10], "inclusive": "both"}
+      ],
+      "buckets": [[0, 0.25, "<25%"], [0.25, 0.35, "25-35%"], [0.35, 0.45, "35-45%"], [0.45, 0.60, "45-60%"], [0.60, 9, ">60%"]]
+    },
+    {
+      "dimension": "60日动量",
+      "factor": "mom60",
+      "fixed_text": "nmc<40亿 & vol60<45%",
+      "fixed_rules": [
+        {"factor": "nmc", "op": "<", "value": 40},
+        {"factor": "vol60", "op": "<", "value": 0.45}
+      ],
+      "buckets": [[-9, -0.25, "<−25%"], [-0.25, -0.10, "−25~−10%"], [-0.10, 0, "−10~0%"], [0, 0.10, "0~10%"], [0.10, 0.25, "10~25%"]]
+    }
+  ]
+}

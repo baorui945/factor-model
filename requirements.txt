@@ -1,0 +1,14 @@
+# ai_backtest_model —— 运行依赖
+# 与量化主工程 venv 完全兼容；建议 Python >= 3.8
+#
+# 安装：
+#     pip install -r requirements.txt
+
+numpy>=1.21
+pandas>=1.3
+pyarrow>=6.0          # parquet 价格缓存
+pymysql>=1.0
+openpyxl>=3.0         # Excel 导出样式
+matplotlib>=3.4       # 6 面板净值图
+tqdm>=4.60            # 导入进度条
+baostock>=0.8.8       # 日线/月线数据源

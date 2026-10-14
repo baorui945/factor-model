@@ -1,0 +1,48 @@
+{
+  "_comment": "信号生成（三因子闸门）配置 —— 指标参数 + F1/F2/F3 判定参数。新增/替换闸门：在 backtest_model/factors/gates/ 注册实现，再在此处增删条目即可，无需改扫描/回测代码。",
+
+  "indicators": {
+    "macd_fast": 30,
+    "macd_slow": 89,
+    "macd_signal": 9,
+    "ma_short": 7,
+    "ma_long": 21
+  },
+
+  "min_bars": 5,
+
+  "gates": [
+    {
+      "key": "F1",
+      "enabled": true,
+      "label": "趋势强弱（K线与均线位置）",
+      "params": {
+        "f1_close_above_ma_days": 3,
+        "f1_lookback_days": 10,
+        "f1_ma21_allow_deviation": 0.98,
+        "f1_close_to_ma21_min": 0.03,
+        "f1_close_to_ma21_max": 0.15
+      }
+    },
+    {
+      "key": "F2",
+      "enabled": true,
+      "label": "趋势方向（MA7/MA21 排列）",
+      "params": {
+        "f2_golden_cross_window": 10,
+        "f2_above_ma_days": 5,
+        "f2_slope_check_days": 1
+      }
+    },
+    {
+      "key": "F3",
+      "enabled": true,
+      "label": "多空力量（MACD 红绿柱）",
+      "params": {
+        "f3_red_bar_days": 3,
+        "f3_increasing_days": 2,
+        "f3_golden_cross_window": 10
+      }
+    }
+  ]
+}

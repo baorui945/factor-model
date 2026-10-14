@@ -1,0 +1,47 @@
+{
+  "_comment": "信号富化配置 —— 行业 / 市值 / PB / vol60 等富化列的数据来源、DB 落库表名与刷新策略。新增/替换富化器：在 backtest_model/factors/enrichers/ 注册实现，再在此处增删条目即可，无需改 enrich_signals / 回测代码。",
+
+  "_comment_tables": "库表名统一取自 config.py（TABLE_FACTOR_SPOT / TABLE_FACTOR_QFQ_DAILY / TABLE_FACTOR_INDEX_DAILY，可被 .env 覆盖），此处不再重复定义，避免双份真相。",
+
+  "update": {
+    "weekly": true,
+    "weekday": 6,
+    "max_age_days": 7,
+    "index_code": "000300",
+    "kline_datalen": 2800,
+    "workers": 8,
+    "batch_size": 5000
+  },
+
+  "buckets": {
+    "mv_total": {"bins": [0, 30, 50, 100, 200, 500, 1000, 1e18],
+                 "labels": ["<30亿", "30-50亿", "50-100亿", "100-200亿", "200-500亿", "500-1000亿", ">1000亿"]},
+    "nmc":      {"bins": [0, 20, 40, 80, 200, 500, 1e18],
+                 "labels": ["<20亿", "20-40亿", "40-80亿", "80-200亿", "200-500亿", ">500亿"]},
+    "pb_t":     {"bins": [0, 1, 2, 4, 8, 1e18],
+                 "labels": ["<1", "1-2", "2-4", "4-8", ">8"]},
+    "vol60":    {"bins": [0, 0.30, 0.45, 0.60, 1e18],
+                 "labels": ["低(<30%)", "中低(30-45%)", "中高(45-60%)", "高(>60%)"]},
+    "mom60":    {"bins": [-1e18, -0.10, 0.0, 0.10, 0.25, 1e18],
+                 "labels": ["<-10%", "-10~0%", "0~10%", "10~25%", ">25%"]},
+    "mkt_dev":  {"bins": [-1e18, -0.03, 0.03, 1e18],
+                 "labels": ["弱势(指数<MA60)", "震荡(±3%)", "强势(指数>MA60)"]},
+    "sig_count":{"bins": [0, 1, 2, 3, 5, 10, 1e18],
+                 "labels": ["1次", "2次", "3次", "4-5次", "6-10次", ">10次"]},
+    "price":    {"bins": [0, 5, 10, 20, 50, 1e18],
+                 "labels": ["<5元", "5-10元", "10-20元", "20-50元", ">50元"]},
+    "pe_now":   {"bins": [0, 15, 30, 60, 100, 1e18],
+                 "labels": ["0-15", "15-30", "30-60", "60-100", ">100"],
+                 "loss_label": "亏损(PE<=0)"}
+  },
+
+  "enrichers": [
+    {"key": "board",          "enabled": true},
+    {"key": "industry",       "enabled": true},
+    {"key": "market_cap",     "enabled": true},
+    {"key": "volatility",     "enabled": true},
+    {"key": "market_regime",  "enabled": true},
+    {"key": "sig_count",      "enabled": true},
+    {"key": "year",           "enabled": true}
+  ]
+}
